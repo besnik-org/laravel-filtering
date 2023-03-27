@@ -12,6 +12,14 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Besnik\\LaravelFiltering\\LaravelFilteringServiceProvider"
+            ]
+        }
+    },
     "authors": [
         {
             "name": "AL EMRAN",

@@ -14,7 +14,7 @@ class LaravelFilteringServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/config/laravel-filtering.php' => config_path('laravel-filtering.php'),
-        ]);
+        ], 'besnik-filtering-config');
     }
 
     public function register()
