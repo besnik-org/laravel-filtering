@@ -1,29 +1,31 @@
 {
-    "name": "besnik/laravel-filtering",
-    "description": "A powerful tool for developers who use Laravel framework and want to implement filtering functionality in their web applications. This package allows you to easily add filters to your queries, enabling users to search for specific data based on various criteria.",
-    "keywords": ["laravel", "filtering"],
-    "require": {
-    },
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Besnik\\LaravelFiltering\\": "src/"
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Besnik\\LaravelFiltering\\LaravelFilteringServiceProvider"
-            ]
-        }
-    },
-    "authors": [
-        {
-            "name": "AL EMRAN",
-            "email": "emrancu1@gmail.com"
-        }
-    ]
+  "name": "besnik/laravel-filtering",
+  "description": "A powerful tool for developers who use Laravel framework and want to implement filtering functionality in their web applications. This package allows you to easily add filters to your queries, enabling users to search for specific data based on various criteria.",
+  "keywords": [
+    "laravel",
+    "filtering"
+  ],
+  "authors": [
+    {
+      "name": "AL EMRAN",
+      "email": "emrancu1@gmail.com"
+    }
+  ],
+  "require": {
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Besnik\\LaravelFiltering\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Besnik\\LaravelFiltering\\LaravelFilteringServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
