@@ -1,5 +1,6 @@
 {
     "name": "besnik/laravel-filtering",
+    "description": "A powerful tool for developers who use Laravel framework and want to implement filtering functionality in their web applications. This package allows you to easily add filters to your queries, enabling users to search for specific data based on various criteria.",
     "type": "library",
     "require": {
     },
