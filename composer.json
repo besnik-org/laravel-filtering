@@ -1,0 +1,19 @@
+{
+    "name": "besnik/laravel-filtering",
+    "type": "library",
+    "require": {
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Besnik\\LaravelFiltering\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "AL EMRAN",
+            "email": "emrancu1@gmail.com"
+        }
+    ]
+}
