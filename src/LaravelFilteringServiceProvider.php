@@ -19,7 +19,9 @@ class LaravelFilteringServiceProvider extends ServiceProvider
 
     public function register()
     {
-
+        $this->mergeConfigFrom(
+            __DIR__.'/config/laravel-filtering.php', 'laravel-filtering'
+        );
     }
 
 }
