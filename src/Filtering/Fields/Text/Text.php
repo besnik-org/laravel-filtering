@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering\Filtering\Fields\Text;
 
@@ -25,7 +25,7 @@ class Text extends FieldContract
 
     public function endWith(string $title = 'End With'): self
     {
-        $this->data['conditions'][Condition::END_WITH->value] = ['title' => $title ];
+        $this->data['conditions'][Condition::END_WITH->value] = ['title' => $title];
 
         return $this;
     }
@@ -33,9 +33,9 @@ class Text extends FieldContract
     public function in(array $options = [], string $separatedBy = ',', ?string $title = 'In'): self
     {
         $this->data[Condition::IN->value] = [
-            'title' => $title ,
+            'title' => $title,
             'separated_by' => $separatedBy,
-            'options' => $options
+            'options' => $options,
         ];
 
         return $this;
@@ -62,15 +62,11 @@ class Text extends FieldContract
 
     protected function setQueryWithCondition(): void
     {
-
         $conditionName = $this->conditionField();
         $conditionValue = request()->input($conditionName);
         $value = trim(request()->input($this->name));
 
         $this->callback = match ($conditionValue) {
-            Condition::EQUAL->value => function () use ($value) {
-                $this->query->where($this->name, '=', $value);
-            },
             Condition::NOT_EQUAL->value => function () use ($value) {
                 $this->query->where($this->name, '!=', $value);
             },
@@ -91,7 +87,5 @@ class Text extends FieldContract
                 $this->query->where($this->name, '=', $value);
             }
         };
-
-
     }
 }

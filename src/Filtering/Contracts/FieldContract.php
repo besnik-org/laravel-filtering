@@ -1,45 +1,27 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering\Filtering\Contracts;
 
-use Besnik\LaravelFiltering\Filtering\Enums\TextCondition;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 abstract class FieldContract
 {
-
     /**
      * @var mixed|\Closure|null
      */
     protected mixed $callback = null;
 
-    /**
-     * @var string|null
-     */
     protected ?string $placeholder = null;
 
-    /**
-     * @var string|null
-     */
     protected ?string $cssClass = null;
 
-    /**
-     * @var string
-     */
     protected string $type;
 
-    /**
-     * @var array
-     */
     protected array $data = [
         'conditions' => [],
-        'config' => []
+        'config' => [],
     ];
 
-    /**
-     * @var array
-     */
     protected array $conditions = [];
 
     public function __construct(
@@ -48,11 +30,11 @@ abstract class FieldContract
         protected string|null $title = null,
         protected string $operator = '=',
     ) {
-        if (!$this->title) {
+        if (! $this->title) {
             $this->title = ucwords(str_replace('_', ' ', $this->name));
         }
 
-       $this->default();
+        $this->default();
     }
 
     public function callback(callable $callback): self
@@ -66,7 +48,6 @@ abstract class FieldContract
     {
         return $this->request->input($name);
     }
-
 
     public function title($title): self
     {
@@ -93,13 +74,13 @@ abstract class FieldContract
 
     private function applyFilter(): void
     {
-
         $value = trim(request()->input($this->name));
 
         if ($value) {
-            if (!$this->callback) {
+            if (! $this->callback) {
                 $this->setQueryWithCondition();
             }
+
             call_user_func($this->callback, $this->query, $value);
         }
     }
@@ -115,6 +96,6 @@ abstract class FieldContract
 
     protected function conditionField(): string
     {
-        return $this->name . '_condition';
+        return $this->name.'_condition';
     }
 }

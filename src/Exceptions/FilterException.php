@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering\Exceptions;
 
@@ -9,4 +9,3 @@ class FilterException extends \Exception
         return new static("Sorry, the filter '{$filterName}' does not exist.");
     }
 }
-

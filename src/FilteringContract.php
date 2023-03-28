@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering;
 
@@ -6,5 +6,5 @@ use Illuminate\Http\Request;
 
 abstract class FilteringContract
 {
-    public abstract function process(Request $request, Filter $filter): Filter;
+    abstract public function process(Request $request, Filter $filter): Filter;
 }

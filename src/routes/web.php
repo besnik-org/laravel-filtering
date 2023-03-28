@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 use Besnik\LaravelFiltering\controllers\FilteringFieldController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('filtering', function (){
-    return "hello";
+Route::get('filtering', function () {
+    return 'hello';
 });
 
 Route::get('besnik-filtering/{filter}', [\Besnik\LaravelFiltering\controllers\FilterController::class, 'index']);

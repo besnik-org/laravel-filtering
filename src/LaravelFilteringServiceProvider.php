@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering;
 
@@ -20,8 +20,8 @@ class LaravelFilteringServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/config/laravel-filtering.php', 'laravel-filtering'
+            __DIR__.'/config/laravel-filtering.php',
+            'laravel-filtering'
         );
     }
-
 }

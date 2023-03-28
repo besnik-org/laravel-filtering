@@ -1,10 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering\Filtering\Fields\Text;
 
 use Besnik\LaravelFiltering\Filtering\Contracts\FieldContract;
 use Besnik\LaravelFiltering\Filtering\Enums\Condition;
-use Illuminate\Database\Eloquent\Builder;
 
 class Option extends FieldContract
 {
@@ -16,7 +15,7 @@ class Option extends FieldContract
             'options' => $options,
             'labelKey' => $labelKey,
             'valueKey' => $valueKey,
-        ] ;
+        ];
 
         return $this;
     }
@@ -31,9 +30,9 @@ class Option extends FieldContract
     public function in(array $options = [], string $separatedBy = ',', ?string $title = 'In'): self
     {
         $this->data['conditions'][Condition::IN->value] = [
-            'title' => $title ,
+            'title' => $title,
             'separated_by' => $separatedBy,
-            'options' => $options
+            'options' => $options,
         ];
 
         return $this;
@@ -50,7 +49,6 @@ class Option extends FieldContract
 
         return $this;
     }
-
 
     protected function setQueryWithCondition(): void
     {

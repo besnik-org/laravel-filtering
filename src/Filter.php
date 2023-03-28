@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering;
 
@@ -8,21 +8,15 @@ use Besnik\LaravelFiltering\Filtering\Fields\Text\Text;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use \Illuminate\Database\Query\Builder as DBBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
+use Illuminate\Database\Query\Builder as DBBuilder;
 
 class Filter
 {
+    public array $fields = [];
 
-    protected  Builder|DBBuilder|Model $query;
-    public  array $fields = [];
+    protected Builder|DBBuilder|Model $query;
 
-
-    /**
-     * @param string $model
-     * @return Filter
-     */
     public function addModel(string $model): self
     {
         /** @var Model $model */
@@ -31,10 +25,6 @@ class Filter
         return $this;
     }
 
-    /**
-     * @param Builder|DBBuilder $builder
-     * @return Filter
-     */
     public function addQuery(Builder|DBBuilder $builder): self
     {
         $this->query = $builder;
@@ -43,10 +33,7 @@ class Filter
     }
 
     /**
-     * @param string $name
-     * @param $title
      * @param $function
-     * @return Text
      */
     public function textField(string $name, $title = null, $operator = '='): Text
     {
@@ -54,42 +41,34 @@ class Filter
     }
 
     /**
-     * @param string $name
-     * @param $title
      * @param $function
-     * @return Option
      */
-    public function optionFiled( string $name, $title = null, $operator = '='): Option
+    public function optionFiled(string $name, $title = null, $operator = '='): Option
     {
-        return $this->fields[$name] = new Option( $this->query, $name, $title, $operator);
+        return $this->fields[$name] = new Option($this->query, $name, $title, $operator);
     }
-
 
     public function first(): mixed
     {
-      return $this->query->first();
+        return $this->query->first();
     }
 
     public function results($isPaginate = true, $paginate = 20): Collection|LengthAwarePaginator|array|string
     {
         $this->applyFields();
 
-        if(!$isPaginate){
-          return  $this->query->get();
+        if (! $isPaginate) {
+            return $this->query->get();
         }
 
-      return $this->query->toSql($paginate);
+        return $this->query->toSql($paginate);
     }
 
-    /**
-     * @return void
-     */
     public function applyFields(): void
     {
         /** @var FieldContract $field */
-        foreach ($this->fields as $field){
+        foreach ($this->fields as $field) {
             $field->apply();
         }
-
     }
 }

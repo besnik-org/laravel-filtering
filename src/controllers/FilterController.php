@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering\controllers;
 
@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 
 class FilterController extends Controller
 {
-
     /**
      * @throws FilterException
      */
@@ -19,7 +18,7 @@ class FilterController extends Controller
         /** @var FilteringContract $filterClass */
         $filterClass = config('laravel-filtering.'.$filterName);
 
-        if (!is_subclass_of($filterClass, FilteringContract::class)) {
+        if (! is_subclass_of($filterClass, FilteringContract::class)) {
             throw FilterException::NoFilterFound($filterName);
         }
 
@@ -27,5 +26,4 @@ class FilterController extends Controller
 
         return $process->results();
     }
-
 }
