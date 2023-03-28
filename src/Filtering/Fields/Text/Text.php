@@ -46,6 +46,18 @@ class Text extends FieldContract
         $this->equal();
     }
 
+    public function allConditions()
+    {
+        $this->data['conditions'] = [
+            Condition::EQUAL->value =>  ['title' => 'Equal'],
+            Condition::NOT_EQUAL->value =>  ['title' => 'Not Equal'],
+            Condition::CONTAIN->value =>  ['title' => 'Contain'],
+            Condition::START_WITH->value =>  ['title' => 'Start With'],
+            Condition::END_WITH->value =>  ['title' => 'ENd With'],
+            Condition::IN->value =>  ['title' => 'In'],
+            ];
+    }
+
     public function equal(string $title = 'Equal'): self
     {
         $this->data['conditions'][Condition::EQUAL->value] = ['title' => $title];
@@ -55,7 +67,7 @@ class Text extends FieldContract
 
     public function contain(string $title = 'Contain'): self
     {
-        $this->data['conditions'][Condition::EQUAL->value] = ['title' => $title];
+        $this->data['conditions'][Condition::CONTAIN->value] = ['title' => $title];
 
         return $this;
     }

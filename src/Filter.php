@@ -64,6 +64,17 @@ class Filter
         return $this->query->toSql($paginate);
     }
 
+    public function getFields($isPaginate = true, $paginate = 20): array
+    {
+        $fields = [];
+        /** @var FieldContract $field */
+        foreach ($this->fields as $key => $field) {
+            $fields[$key] =  $field->fields();
+        }
+
+        return $fields;
+    }
+
     public function applyFields(): void
     {
         /** @var FieldContract $field */

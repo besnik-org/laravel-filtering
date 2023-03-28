@@ -72,7 +72,7 @@ abstract class FieldContract
 
     abstract protected function default();
 
-    private function applyFilter(): void
+    private function applyFilter()
     {
         $value = trim(request()->input($this->name));
 
@@ -83,12 +83,15 @@ abstract class FieldContract
 
             call_user_func($this->callback, $this->query, $value);
         }
+
+        return true;
     }
 
     public function __call($method, $args)
     {
-        match ($method) {
+       return match ($method) {
             'apply' => $this->applyFilter(),
+            'fields' => $this->getFields(),
         };
     }
 
@@ -97,5 +100,10 @@ abstract class FieldContract
     protected function conditionField(): string
     {
         return $this->name.'_condition';
+    }
+
+    protected function getFields(): array
+    {
+        return $this->data;
     }
 }
