@@ -9,13 +9,9 @@ class Option extends FieldContract
 {
     protected string $type = 'text';
 
-    public function options(array|object $options, $labelKey = 'name', $valueKey = 'id'): self
+    public function config(array|object $config): self
     {
-        $this->data['config'] = [
-            'options' => $options,
-            'labelKey' => $labelKey,
-            'valueKey' => $valueKey,
-        ];
+        $this->data['config'] = $config;
 
         return $this;
     }
