@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering\controllers;
 
@@ -6,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Besnik\LaravelFiltering\Exceptions\FilterException;
 use Besnik\LaravelFiltering\Filter;
 use Besnik\LaravelFiltering\FilteringContract;
+use Exception;
 use Illuminate\Http\Request;
 
 class FilteringFieldController extends Controller
@@ -25,5 +27,15 @@ class FilteringFieldController extends Controller
         $process = (new $filterClass())->process($request, new Filter());
 
         return $process->getFields();
+    }
+
+
+    public function modelOptions(Request $request)
+    {
+        try {
+            return $request->model::all();
+        } catch (Exception $exception) {
+            return [];
+        }
     }
 }

@@ -89,7 +89,7 @@ abstract class FieldContract
 
     public function __call($method, $args)
     {
-       return match ($method) {
+        return match ($method) {
             'apply' => $this->applyFilter(),
             'fields' => $this->getFields(),
         };

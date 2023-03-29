@@ -10,3 +10,4 @@ Route::get('filtering', function () {
 Route::get('besnik-filtering/{filter}', [\Besnik\LaravelFiltering\controllers\FilterController::class, 'index']);
 
 Route::get('besnik-filtering-fields/{filter}', [FilteringFieldController::class, 'index']);
+Route::get('besnik-filtering-options', [FilteringFieldController::class, 'modelOptions']);

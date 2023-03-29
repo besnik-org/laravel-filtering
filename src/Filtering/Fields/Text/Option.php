@@ -16,6 +16,14 @@ class Option extends FieldContract
         return $this;
     }
 
+    public function allConditions()
+    {
+        $this->equal();
+        $this->notEqual();
+        $this->in();
+        $this->notIn();
+    }
+
     public function notEqual(string $title = 'Not Equal'): self
     {
         $this->data['conditions'][Condition::NOT_EQUAL->value] = ['title' => $title];
@@ -26,6 +34,17 @@ class Option extends FieldContract
     public function in(array $options = [], string $separatedBy = ',', ?string $title = 'In'): self
     {
         $this->data['conditions'][Condition::IN->value] = [
+            'title' => $title,
+            'separated_by' => $separatedBy,
+            'options' => $options,
+        ];
+
+        return $this;
+    }
+
+    public function notIn(array $options = [], string $separatedBy = ',', ?string $title = 'In'): self
+    {
+        $this->data['conditions'][Condition::NOT_IN->value] = [
             'title' => $title,
             'separated_by' => $separatedBy,
             'options' => $options,
@@ -53,7 +72,7 @@ class Option extends FieldContract
 
         $value = trim(request()->input($this->name));
 
-        match ($conditionValue) {
+        $this->callback = match ($conditionValue) {
             Condition::EQUAL->value => function () use ($value) {
                 $this->query->where($this->name, '=', $value);
             },
@@ -63,6 +82,10 @@ class Option extends FieldContract
             Condition::IN->value => function () use ($value) {
                 $separatedBy = $this->data[Condition::IN->value]['separated_by'] ?? ',';
                 $this->query->whereIn($this->name, explode($separatedBy, $value));
+            },
+            Condition::NOT_IN->value => function () use ($value) {
+                $separatedBy = $this->data[Condition::NOT_IN->value]['separated_by'] ?? ',';
+                $this->query->whereNotIn($this->name, explode($separatedBy, $value));
             },
             default => null
         };
