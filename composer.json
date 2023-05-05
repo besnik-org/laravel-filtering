@@ -16,13 +16,15 @@
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "Besnik\\LaravelFiltering\\": "src/"
+      "Besnik\\LaravelFiltering\\": "src/",
+      "Besnik\\LaravelInertiaCrud\\": "CRUD/"
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "Besnik\\LaravelFiltering\\LaravelFilteringServiceProvider"
+        "LaravelInertiaCrudServiceProvider",
+        "Besnik\\LaravelInertiaCrud\\LaravelInertiaCrudServiceProvider"
       ]
     }
   },
