@@ -1,13 +1,13 @@
 # laravel-filtering
 
-
 ```shell
 php artisan vendor:publish --provider="Besnik\LaravelFiltering\LaravelFilteringServiceProvider" --tag="besnik-filtering-config"
 ```
 
-
 #### Option field Config:
+
 1. One
+
 ```injectablephp
  [
     'options' => [],
@@ -17,6 +17,7 @@ php artisan vendor:publish --provider="Besnik\LaravelFiltering\LaravelFilteringS
 ```
 
 2. Two
+
 ```injectablephp
  [
     'model' => User::class,
@@ -26,6 +27,7 @@ php artisan vendor:publish --provider="Besnik\LaravelFiltering\LaravelFilteringS
 ```
 
 3. Three
+
 ```injectablephp
  [
     'model' => User::class,
@@ -36,6 +38,7 @@ php artisan vendor:publish --provider="Besnik\LaravelFiltering\LaravelFilteringS
 ```
 
 3. Three
+
 ```injectablephp
  [
     'api' => 'url',

@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace Besnik\LaravelInertiaCrud;
 
@@ -15,13 +16,11 @@ class LaravelInertiaCrudServiceProvider extends ServiceProvider
         $this->offerPublishing();
 
         $this->registerCommands();
-
     }
 
     protected function offerPublishing()
     {
         if ($this->app->runningInConsole()) {
-
 //            $this->publishes([
 //                __DIR__.'/' => config_path('horizon.php'),
 //            ], 'horizon-config');
@@ -29,7 +28,6 @@ class LaravelInertiaCrudServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/public/assets' => public_path('vendor/besnik-crud'),
             ], ['inertia-crud-assets', 'laravel-assets']);
-
         }
     }
 
@@ -42,13 +40,10 @@ class LaravelInertiaCrudServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                 PublishCommand::class,
+                PublishCommand::class,
             ]);
         }
     }
 
-    public function register()
-    {
-
-    }
+    public function register() {}
 }

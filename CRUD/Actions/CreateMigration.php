@@ -3,17 +3,16 @@
 namespace Besnik\LaravelInertiaCrud\Actions;
 
 use Besnik\LaravelInertiaCrud\Utilities\CrudSupports;
+use Besnik\LaravelInertiaCrud\Utilities\MessageBucket;
 use Illuminate\Support\Facades\File;
 
 class CreateMigration
 {
 
-    /**
-     * @throws \Exception
-     */
+
     public function execute(CrudSupports $crudSupports): bool
     {
-        $migrationSupport =  $crudSupports->migrationSupports();
+        $migrationSupport = $crudSupports->migrationSupports();
         $timestamp = now()->format('Y_m_d_His');
 
         $migrationFileName = "{$timestamp}_create_{$crudSupports->tableName}_table.php";
@@ -43,6 +42,7 @@ class CreateMigration
 
         File::put(database_path("migrations/{$migrationFileName}"), $migrationCode);
 
+        MessageBucket::addInfo("Migration for `{$crudSupports->name}` Created");
         return true;
     }
 }

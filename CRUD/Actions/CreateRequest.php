@@ -3,20 +3,19 @@
 namespace Besnik\LaravelInertiaCrud\Actions;
 
 use Besnik\LaravelInertiaCrud\Utilities\CrudSupports;
-use Exception;
+use Besnik\LaravelInertiaCrud\Utilities\MessageBucket;
 use Illuminate\Support\Facades\File;
 
 class CreateRequest
 {
-    /**
-     * @throws \Exception
-     */
+
     public function execute(CrudSupports $crudSupports): bool
     {
         $requestSupport = $crudSupports->requestSupports();
 
         if (File::exists($requestSupport->fullPath)) {
-            throw new Exception("Request Already exist");
+            MessageBucket::addError("Request {$requestSupport->name} Already exist");
+            return false;
         }
 
         $requestCode = "<?php\n\n";
@@ -36,6 +35,8 @@ class CreateRequest
         $requestCode .= "}\n";
 
         File::put($requestSupport->fullPath, $requestCode);
+
+        MessageBucket::addInfo("Request {$requestSupport->name} Created");
 
         return true;
     }

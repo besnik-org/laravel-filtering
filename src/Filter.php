@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering;
 
@@ -57,22 +58,11 @@ class Filter
     {
         $this->applyFields();
 
-        if (! $isPaginate) {
+        if (!$isPaginate) {
             return $this->query->get();
         }
 
         return $this->query->toSql($paginate);
-    }
-
-    public function getFields($isPaginate = true, $paginate = 20): array
-    {
-        $fields = [];
-        /** @var FieldContract $field */
-        foreach ($this->fields as $key => $field) {
-            $fields[$key] =  $field->fields();
-        }
-
-        return $fields;
     }
 
     public function applyFields(): void
@@ -81,5 +71,16 @@ class Filter
         foreach ($this->fields as $field) {
             $field->apply();
         }
+    }
+
+    public function getFields($isPaginate = true, $paginate = 20): array
+    {
+        $fields = [];
+        /** @var FieldContract $field */
+        foreach ($this->fields as $key => $field) {
+            $fields[$key] = $field->fields();
+        }
+
+        return $fields;
     }
 }

@@ -1,4 +1,3 @@
-
 let builder = require("bundle-master")
 
 module.exports = builder

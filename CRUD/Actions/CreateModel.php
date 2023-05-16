@@ -3,20 +3,20 @@
 namespace Besnik\LaravelInertiaCrud\Actions;
 
 use Besnik\LaravelInertiaCrud\Utilities\CrudSupports;
+use Besnik\LaravelInertiaCrud\Utilities\MessageBucket;
 use Illuminate\Support\Facades\File;
 
 class CreateModel
 {
-    /**
-     * @throws \Exception
-     */
+
     public function execute(CrudSupports $crudSupports): bool
     {
-        $modelSupport =  $crudSupports->modelSupports();
+        $modelSupport = $crudSupports->modelSupports();
 
         // Check if the model already exists
         if (File::exists($modelSupport->fullPath)) {
-            throw new \Exception("Model Already exist");
+            MessageBucket::addError("Model ` {$crudSupports->name}` Already exist");
+            return false;
         }
 
         $modelCode = "<?php\n\n";
@@ -34,7 +34,7 @@ class CreateModel
         $modelCode .= "}\n";
 
         File::put($modelSupport->fullPath, $modelCode);
-
+        MessageBucket::addInfo("Model ` {$crudSupports->name}` Created");
         return true;
     }
 }

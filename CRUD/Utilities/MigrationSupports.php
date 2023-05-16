@@ -8,8 +8,7 @@ use Besnik\LaravelInertiaCrud\Enums\FieldType;
 class MigrationSupports
 {
 
-    public function __construct(private readonly CrudSupports $crudSupports)
-    {}
+    public function __construct(private readonly CrudSupports $crudSupports) {}
 
     public function fieldsString(): string
     {

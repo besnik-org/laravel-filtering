@@ -19,10 +19,11 @@ class CrudDto extends DtoAbstraction
     public bool $createInertiaUpdateModal;
     public bool $createInertiaDeletePrompt;
     public array $fields;
+    public string $route;
 
     public function __construct($data = [])
     {
-        $request =  request();
+        $request = request();
         $this->name = Str::studly(str_replace(' ', '', $request->input('name')));
         $this->createModel = $request->input('model');
         $this->createMigration = $request->input('migration');
@@ -35,8 +36,9 @@ class CrudDto extends DtoAbstraction
         $this->createInertiaCreateModal = $request->input('create_modal');
         $this->createInertiaUpdateModal = $request->input('update_modal');
         $this->createInertiaDeletePrompt = $request->input('delete_prompt');
+        $this->route = $request->input('route');
         $this->fields = [];
-        foreach ( $request->input('fields') ?? [] as $field){
+        foreach ($request->input('fields') ?? [] as $field) {
             $field['type'] = $field['type']['id'];
             $this->fields[] = new CrudFieldDto([
                 ...$field

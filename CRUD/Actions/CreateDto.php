@@ -5,7 +5,7 @@ namespace Besnik\LaravelInertiaCrud\Actions;
 use Besnik\LaravelInertiaCrud\DTO\CrudFieldDto;
 use Besnik\LaravelInertiaCrud\Enums\FieldType;
 use Besnik\LaravelInertiaCrud\Utilities\CrudSupports;
-use Exception;
+use Besnik\LaravelInertiaCrud\Utilities\MessageBucket;
 use Illuminate\Support\Facades\File;
 
 class CreateDto
@@ -18,7 +18,8 @@ class CreateDto
 
         // Check if the DTO already exists
         if (File::exists($dtoSupport->fullPath)) {
-            throw new Exception("Dto Already exist");
+            MessageBucket::addError("Dto {$dtoSupport->name} Already exist");
+            return false;
         }
 
         // Create the DTO file dynamically
@@ -37,6 +38,7 @@ class CreateDto
             $dtoAssign .= "        \$this->{$field->name} = \$data['{$field->name}'] ?? \$request->input('{$field->name}');\n";
         }
 
+
         $dtoCode .= "\n    public function __construct(\$data = [])\n";
         $dtoCode .= "    {\n";
         $dtoCode .= "        \$request = request();\n";
@@ -45,6 +47,8 @@ class CreateDto
         $dtoCode .= "}\n";
 
         File::put($dtoSupport->fullPath, $dtoCode);
+
+        MessageBucket::addError("Dto {$dtoSupport->name} Created");
 
         return true;
     }
@@ -56,7 +60,7 @@ class CreateDto
         File::ensureDirectoryExists(app_path('DTO/CRUD'));
 
         if (File::exists($filePath)) {
-            return ;
+            return;
         }
 
         $fileContent = "<?php\n\n";

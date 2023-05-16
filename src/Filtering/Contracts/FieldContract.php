@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering\Filtering\Contracts;
 
@@ -30,12 +31,14 @@ abstract class FieldContract
         protected string|null $title = null,
         protected string $operator = '=',
     ) {
-        if (! $this->title) {
+        if (!$this->title) {
             $this->title = ucwords(str_replace('_', ' ', $this->name));
         }
 
         $this->default();
     }
+
+    abstract protected function default();
 
     public function callback(callable $callback): self
     {
@@ -70,14 +73,20 @@ abstract class FieldContract
         return $this;
     }
 
-    abstract protected function default();
+    public function __call($method, $args)
+    {
+        return match ($method) {
+            'apply' => $this->applyFilter(),
+            'fields' => $this->getFields(),
+        };
+    }
 
     private function applyFilter()
     {
         $value = trim(request()->input($this->name));
 
         if ($value) {
-            if (! $this->callback) {
+            if (!$this->callback) {
                 $this->setQueryWithCondition();
             }
 
@@ -87,23 +96,15 @@ abstract class FieldContract
         return true;
     }
 
-    public function __call($method, $args)
-    {
-        return match ($method) {
-            'apply' => $this->applyFilter(),
-            'fields' => $this->getFields(),
-        };
-    }
-
     abstract protected function setQueryWithCondition();
-
-    protected function conditionField(): string
-    {
-        return $this->name.'_condition';
-    }
 
     protected function getFields(): array
     {
         return $this->data;
+    }
+
+    protected function conditionField(): string
+    {
+        return $this->name.'_condition';
     }
 }

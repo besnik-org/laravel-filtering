@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering\controllers;
 
@@ -18,7 +19,7 @@ class FilterController extends Controller
         /** @var FilteringContract $filterClass */
         $filterClass = config('laravel-filtering.'.$filterName);
 
-        if (! is_subclass_of($filterClass, FilteringContract::class)) {
+        if (!is_subclass_of($filterClass, FilteringContract::class)) {
             throw FilterException::NoFilterFound($filterName);
         }
 

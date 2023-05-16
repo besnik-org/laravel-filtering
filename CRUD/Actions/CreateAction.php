@@ -44,7 +44,6 @@ class CreateAction
         $actionCode .= "}\n";
 
 
-
         $actionCode .= "\n    public function __construct(\$data = [])\n";
         $actionCode .= "    {\n";
         $actionCode .= "        \$request = request();\n";

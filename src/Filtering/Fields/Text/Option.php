@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering\Filtering\Fields\Text;
 
@@ -22,6 +23,13 @@ class Option extends FieldContract
         $this->notEqual();
         $this->in();
         $this->notIn();
+    }
+
+    public function equal(string $title = 'Equal'): self
+    {
+        $this->data['conditions'][Condition::EQUAL->value] = ['title' => $title];
+
+        return $this;
     }
 
     public function notEqual(string $title = 'Not Equal'): self
@@ -56,13 +64,6 @@ class Option extends FieldContract
     protected function default()
     {
         $this->equal();
-    }
-
-    public function equal(string $title = 'Equal'): self
-    {
-        $this->data['conditions'][Condition::EQUAL->value] = ['title' => $title];
-
-        return $this;
     }
 
     protected function setQueryWithCondition(): void

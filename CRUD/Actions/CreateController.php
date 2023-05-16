@@ -4,7 +4,7 @@ namespace Besnik\LaravelInertiaCrud\Actions;
 
 use Besnik\LaravelInertiaCrud\Utilities\ActionCreateSupports;
 use Besnik\LaravelInertiaCrud\Utilities\CrudSupports;
-use Exception;
+use Besnik\LaravelInertiaCrud\Utilities\MessageBucket;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -25,7 +25,8 @@ class CreateController
 
 
         if (File::exists($controllerSupport->fullPath)) {
-            throw new Exception("Controller Already exist");
+            MessageBucket::addError("Controller `{$controllerSupport->name}` Already exist");
+            return true;
         }
 
         $requestCode = "<?php\n\n";
@@ -112,9 +113,9 @@ class CreateController
 
         File::put($controllerSupport->fullPath, $requestCode);
 
+        MessageBucket::addInfo("Controller {$controllerSupport->name} Created");
         return true;
     }
-
 
 
 }

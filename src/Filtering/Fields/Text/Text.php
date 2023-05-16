@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering\Filtering\Fields\Text;
 
@@ -9,9 +10,27 @@ class Text extends FieldContract
 {
     protected string $type = 'text';
 
+    public function allConditions()
+    {
+        $this->equal();
+        $this->notEqual();
+        $this->contain();
+        $this->startWith();
+        $this->endWith();
+        $this->in();
+        $this->notIn();
+    }
+
     public function notEqual(string $title = 'Not Equal'): self
     {
         $this->data['conditions'][Condition::NOT_EQUAL->value] = ['title' => $title];
+
+        return $this;
+    }
+
+    public function contain(string $title = 'Contain'): self
+    {
+        $this->data['conditions'][Condition::CONTAIN->value] = ['title' => $title];
 
         return $this;
     }
@@ -57,27 +76,9 @@ class Text extends FieldContract
         $this->equal();
     }
 
-    public function allConditions()
-    {
-        $this->equal();
-        $this->notEqual();
-        $this->contain();
-        $this->startWith();
-        $this->endWith();
-        $this->in();
-        $this->notIn();
-    }
-
     public function equal(string $title = 'Equal'): self
     {
         $this->data['conditions'][Condition::EQUAL->value] = ['title' => $title];
-
-        return $this;
-    }
-
-    public function contain(string $title = 'Contain'): self
-    {
-        $this->data['conditions'][Condition::CONTAIN->value] = ['title' => $title];
 
         return $this;
     }

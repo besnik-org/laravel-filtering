@@ -9,6 +9,7 @@ class CrudSupports
 {
     public string $tableName;
     public string $name;
+    public string $route;
     public string $extraNamespace;
 
     public function __construct(public readonly CrudDto $crudDto)
@@ -21,6 +22,7 @@ class CrudSupports
         [$this->extraNamespace, $this->name] = $this->extractPathAndFileName($this->crudDto->name);
 
         $this->tableName = Str::plural(Str::snake($this->name));
+        $this->route = $this->crudDto->route;
     }
 
     private function extractPathAndFileName($path): array
@@ -113,7 +115,7 @@ class CrudSupports
      */
     public function actionSupports($type): ActionUpdateSupports
     {
-        app()->bindIf(ActionUpdateSupports::class, function () use($type){
+        app()->bindIf(ActionUpdateSupports::class, function () use ($type) {
             return new ActionUpdateSupports($this, $type);
         });
 
@@ -127,7 +129,7 @@ class CrudSupports
      */
     public function actionIndexSupports($type): ActionIndexSupports
     {
-        app()->bindIf(ActionIndexSupports::class, function () use($type){
+        app()->bindIf(ActionIndexSupports::class, function () use ($type) {
             return new ActionIndexSupports($this, $type);
         });
 
@@ -141,7 +143,7 @@ class CrudSupports
      */
     public function actionStoreSupports($type): ActionStoreSupports
     {
-        app()->bindIf(ActionStoreSupports::class, function () use($type){
+        app()->bindIf(ActionStoreSupports::class, function () use ($type) {
             return new ActionStoreSupports($this, $type);
         });
 
@@ -155,7 +157,7 @@ class CrudSupports
      */
     public function actionUpdateSupports($type): ActionUpdateSupports
     {
-        app()->bindIf(ActionUpdateSupports::class, function () use($type){
+        app()->bindIf(ActionUpdateSupports::class, function () use ($type) {
             return new ActionUpdateSupports($this, $type);
         });
 
@@ -168,11 +170,21 @@ class CrudSupports
      */
     public function actionDeleteSupports($type): ActionDeleteSupports
     {
-        app()->bindIf(ActionDeleteSupports::class, function () use($type){
+        app()->bindIf(ActionDeleteSupports::class, function () use ($type) {
             return new ActionDeleteSupports($this, $type);
         });
 
         return app()->get(ActionDeleteSupports::class);
     }
+
+    public function vueSupports(): VueSupports
+    {
+        app()->bindIf(VueSupports::class, function () {
+            return new VueSupports($this);
+        });
+
+        return app()->get(VueSupports::class);
+    }
+
 
 }

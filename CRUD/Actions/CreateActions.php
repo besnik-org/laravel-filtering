@@ -2,25 +2,24 @@
 
 namespace Besnik\LaravelInertiaCrud\Actions;
 
+use Besnik\LaravelInertiaCrud\DTO\CrudFieldDto;
+use Besnik\LaravelInertiaCrud\Utilities\ActionDeleteSupports;
+use Besnik\LaravelInertiaCrud\Utilities\ActionIndexSupports;
+use Besnik\LaravelInertiaCrud\Utilities\ActionStoreSupports;
+use Besnik\LaravelInertiaCrud\Utilities\ActionUpdateSupports;
 use Besnik\LaravelInertiaCrud\Utilities\CrudSupports;
 use Besnik\LaravelInertiaCrud\Utilities\DtoSupports;
-use Exception;
+use Besnik\LaravelInertiaCrud\Utilities\MessageBucket;
+use Besnik\LaravelInertiaCrud\Utilities\ModelSupports;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class CreateActionForIndex
+class CreateActions
 {
-    /**
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Exception
-     */
     public function execute(CrudSupports $crudSupports): bool
     {
-        $modelSupport = $crudSupports->modelSupports();
         $dtoSupport = $crudSupports->dtoSupports();
         $modelSupport = $crudSupports->modelSupports();
-        $requestSupport = $crudSupports->requestSupports();
         $actionIndexSupports = $crudSupports->actionIndexSupports('Index');
         $actionStoreSupports = $crudSupports->actionStoreSupports('Store');
         $actionUpdateSupports = $crudSupports->actionUpdateSupports('Update');
@@ -36,13 +35,14 @@ class CreateActionForIndex
     }
 
     public function createIndexAction(
-        \Besnik\LaravelInertiaCrud\Utilities\ActionIndexSupports $actionIndexSupports,
-        \Besnik\LaravelInertiaCrud\Utilities\ModelSupports $modelSupport,
+        ActionIndexSupports $actionIndexSupports,
+        ModelSupports $modelSupport,
         CrudSupports $crudSupports
     ): void {
 // Check if the DTO already exists
         if (File::exists($actionIndexSupports->fullPath)) {
-            throw new Exception("Action Index Already exist");
+            MessageBucket::addError("Action {$actionIndexSupports->name} Already exist");
+            return;
         }
 
         $actionCode = "<?php\n\n";
@@ -52,7 +52,7 @@ class CreateActionForIndex
         $actionCode .= "class {$actionIndexSupports->name}\n";
         $actionCode .= "{\n";
 
-        $returnModelAlias = Str::camel($crudSupports->name);;
+        $returnModelAlias = Str::camel($crudSupports->name);
 
         $actionCode .= "    public function execute(): array\n";
         $actionCode .= "    {\n";
@@ -63,18 +63,21 @@ class CreateActionForIndex
         $actionCode .= "}\n";
 
         File::put($actionIndexSupports->fullPath, $actionCode);
+
+        MessageBucket::addInfo("Action {$actionIndexSupports->name} Created");
     }
 
 
     public function createStoreAction(
-        \Besnik\LaravelInertiaCrud\Utilities\ActionStoreSupports $actionStoreSupports,
-        \Besnik\LaravelInertiaCrud\Utilities\ModelSupports $modelSupport,
+        ActionStoreSupports $actionStoreSupports,
+        ModelSupports $modelSupport,
         CrudSupports $crudSupports,
         DtoSupports $dtoSupport
     ): void {
         // Check if the DTO already exists
         if (File::exists($actionStoreSupports->fullPath)) {
-            throw new Exception("Action Index Already exist");
+            MessageBucket::addError("Action {$actionStoreSupports->name}  Already exist");
+            return;
         }
 
         $actionCode = "<?php\n\n";
@@ -85,29 +88,39 @@ class CreateActionForIndex
         $actionCode .= "class {$actionStoreSupports->name}\n";
         $actionCode .= "{\n";
 
-        $returnModelAlias = Str::camel($crudSupports->name);;
+        $returnModelAlias = Str::camel($crudSupports->name);
 
         $dtoAlias = Str::camel($dtoSupport->name);
         $storeDependency = "{$dtoSupport->name} \${$dtoAlias}";
 
         $actionCode .= "    public function execute({$storeDependency})\n";
         $actionCode .= "    {\n";
+        $actionCode .= "    \${$returnModelAlias} = new {$crudSupports->name}();\n";
+        foreach ($crudSupports->crudDto->fields as $field) {
+            /** @var CrudFieldDto $field */
+            $actionCode .= "    \${$returnModelAlias}->{$field->name} = \${$dtoAlias}->{$field->name};\n";
+        }
 
+        $actionCode .= "    \${$returnModelAlias}->save();\n";
+        $actionCode .= "    return \${$returnModelAlias};\n";
         $actionCode .= "    }\n";
         $actionCode .= "}\n";
 
         File::put($actionStoreSupports->fullPath, $actionCode);
+
+        MessageBucket::addInfo("Action {$actionStoreSupports->name}  Created");
     }
 
     public function createUpdateAction(
-        \Besnik\LaravelInertiaCrud\Utilities\ActionUpdateSupports $actionUpdateSupports,
-        \Besnik\LaravelInertiaCrud\Utilities\ModelSupports $modelSupport,
+        ActionUpdateSupports $actionUpdateSupports,
+        ModelSupports $modelSupport,
         CrudSupports $crudSupports,
         DtoSupports $dtoSupport
     ): void {
         // Check if the DTO already exists
         if (File::exists($actionUpdateSupports->fullPath)) {
-            throw new Exception("Action Index Already exist");
+            MessageBucket::addError("Action {$actionUpdateSupports->name}  Already exist");
+            return;
         }
 
         $actionCode = "<?php\n\n";
@@ -127,23 +140,32 @@ class CreateActionForIndex
         $actionCode .= "    public function execute({$dependency})\n";
         $actionCode .= "    {\n";
 
+        foreach ($crudSupports->crudDto->fields as $field) {
+            /** @var CrudFieldDto $field */
+            $actionCode .= "    \${$returnModelAlias}->{$field->name} = \${$dtoAlias}->{$field->name};\n";
+        }
+
+        $actionCode .= "    \${$returnModelAlias}->update();\n";
+        $actionCode .= "    return \${$returnModelAlias};\n";
         $actionCode .= "    }\n";
         $actionCode .= "}\n";
 
         File::put($actionUpdateSupports->fullPath, $actionCode);
+
+        MessageBucket::addInfo("Action {$actionUpdateSupports->name}  created");
     }
 
 
     public function createDeleteAction(
-        \Besnik\LaravelInertiaCrud\Utilities\ActionDeleteSupports $actionDeleteSupports,
-        \Besnik\LaravelInertiaCrud\Utilities\ModelSupports $modelSupport,
+        ActionDeleteSupports $actionDeleteSupports,
+        ModelSupports $modelSupport,
         CrudSupports $crudSupports,
         DtoSupports $dtoSupport
     ): void {
-
         // Check if the DTO already exists
         if (File::exists($actionDeleteSupports->fullPath)) {
-            throw new Exception("Action Delete Already exist");
+            MessageBucket::addError("Action {$actionDeleteSupports->name}  Already exist");
+            return;
         }
 
         $actionCode = "<?php\n\n";
@@ -163,6 +185,8 @@ class CreateActionForIndex
         $actionCode .= "}\n";
 
         File::put($actionDeleteSupports->fullPath, $actionCode);
+
+        MessageBucket::addInfo("Action {$actionDeleteSupports->name}  created");
     }
 
 }

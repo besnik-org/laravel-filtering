@@ -27,7 +27,6 @@ class PublishCommand extends Command
      */
     public function handle()
     {
-
 //        $this->comment('Publishing Horizon Service Provider...');
 //        $this->callSilent('vendor:publish', ['--tag' => 'horizon-provider']);
 
