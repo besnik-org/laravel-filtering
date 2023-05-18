@@ -20,7 +20,7 @@ class VueSupports
 
     public function generate(): void
     {
-        $this->path = base_path("resources/js/Admin/".($this->crudSupports->extraNamespace ? $this->crudSupports->extraNamespace.'/' : '').$this->crudSupports->name.'/');
+        $this->path = base_path("resources/js/Admin/Pages/".($this->crudSupports->extraNamespace ? $this->crudSupports->extraNamespace.'/' : '').$this->crudSupports->name.'/');
         $this->indexVuePath = $this->path.'Index.vue';
         $this->createModalPath = $this->path.'/'.'CreateModal.vue';
         $this->updateModalPath = $this->path.'/'.'UpdateModal.vue';

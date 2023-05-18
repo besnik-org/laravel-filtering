@@ -38,7 +38,10 @@ class RequestSupports
             $validationRules = trim(trim($field->validationRules), '|');
             $rules = $field->required ? "'required', " : "'nullable', ";
             foreach (explode('|', $validationRules) as $rule) {
-                $rules .= "'$rule', ";
+                 $rule = trim($rule);
+                 if($rule){
+                     $rules .= "'$rule', ";
+                 }
             }
 
             $rules = trim($rules, ', ');

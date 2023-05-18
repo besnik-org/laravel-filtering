@@ -68,19 +68,20 @@ class CreateController
         $actionIndexAlias = Str::camel($actionIndexSupports->name);
         $requestCode .= "    public function index({$actionIndexSupports->name} \${$actionIndexAlias}): \Inertia\Response\n";
         $requestCode .= "    {\n";
-        $requestCode .= "        return Inertia::render('Admin/{$crudSupports->name}', \${$actionIndexAlias}->execute());\n";
+        $requestCode .= "        return Inertia::render('{$crudSupports->name}/Index', \${$actionIndexAlias}->execute());\n";
         $requestCode .= "    }\n\n";
 
         // store method
         $actionStoreAlias = Str::camel($actionStoreSupports->name);
 
-        $storeDependency = "{$dtoSupport->name} \${$dtoAlias}";
-        $storeDependency .= ", {$requestSupport->name} \${$requestAlias}";
+        $storeDependency = ", {$requestSupport->name} \${$requestAlias}";
+        $storeDependency .= "{$dtoSupport->name} \${$dtoAlias}";
         $storeDependency .= ", {$actionStoreSupports->name} \${$actionStoreAlias}";
 
         $requestCode .= "    public function store(".$storeDependency."): RedirectResponse\n";
         $requestCode .= "    {\n";
-        $requestCode .= "        return \${$actionStoreAlias}->execute(\${$dtoAlias});\n";
+        $requestCode .= "           \${$actionStoreAlias}->execute(\${$dtoAlias});\n";
+        $requestCode .= "        return redirect(route('{$crudSupports->route}.index'));\n";
         $requestCode .= "    }\n\n";
 
 
@@ -89,8 +90,8 @@ class CreateController
 
         $modelAlias = Str::camel($crudSupports->name);
 
-        $updateDependency = "{$dtoSupport->name} \${$dtoAlias}";
-        $updateDependency .= ", {$requestSupport->name} \${$requestAlias}";
+        $updateDependency = ", {$requestSupport->name} \${$requestAlias}";
+        $updateDependency .= "{$dtoSupport->name} \${$dtoAlias}";
         $updateDependency .= ", {$actionUpdateSupports->name} \${$actionUpdateAlias}";
         $updateDependency .= ", {$crudSupports->name} \${$modelAlias}";
 

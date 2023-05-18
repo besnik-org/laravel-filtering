@@ -53,15 +53,15 @@ class CreateVue
 
         File::put($support->indexVuePath, <<<EOT
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import AuthenticatedLayout from '@/Admin/Layouts/AuthenticatedLayout.vue';
 import { onMounted, ref} from "vue";
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import PrimaryButton from '@/Admin/Components/PrimaryButton.vue';
 import {TailwindPagination} from 'laravel-vue-pagination';
 import {getPaginateData, deleteData} from './Support';
 import CreateModal from './CreateModal.vue';
 import UpdateModal from './UpdateModal.vue';
-import {webToast} from '@/Utilities/webtoast'
-import {openModal} from "@/Components/InteractiveUI/Modal";
+import {webToast} from '@/Admin/Utilities/webtoast'
+import {openModal} from "@/Admin/Components/InteractiveUI/Modal";
 
 const props = defineProps({
   servers: Object,
@@ -215,11 +215,11 @@ EOT
 
 <script setup>
 import { useForm} from '@inertiajs/vue3';
-import {Modal, openModal, closeModal} from '@/Components/InteractiveUI/Modal';
+import {Modal, openModal, closeModal} from '@/Admin/Components/InteractiveUI/Modal';
 import {onMounted, ref, watch} from "vue";
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import {webToast} from "@/Utilities/webtoast";
-import InputError from '@/Components/InputError.vue';
+import PrimaryButton from '@/Admin/Components/PrimaryButton.vue';
+import {webToast} from "@/Admin/Utilities/webtoast";
+import InputError from '@/Admin/Components/InputError.vue';
 import NProgress from 'nprogress'
 
 
@@ -246,7 +246,7 @@ const submit = () => {
       })
     },
     onSuccess: () => {
-      closeModal()
+      closeModal('update')
       webToast.Success({
         status:'Wow !',
         message:'Operation Success'
@@ -284,7 +284,7 @@ EOT
 
         File::put($support->updateModalPath, <<<EOT
 <template>
-  <Modal uid="create"  :outsideClick="false">
+  <Modal uid="update"  :outsideClick="false">
     <template v-slot:title>
       Create Server
     </template>
@@ -310,11 +310,11 @@ EOT
 
 <script setup>
 import { useForm} from '@inertiajs/vue3';
-import {Modal, openModal, closeModal} from '@/Components/InteractiveUI/Modal';
+import {Modal, openModal, closeModal} from '@/Admin/Components/InteractiveUI/Modal';
 import {onMounted, ref, watch} from "vue";
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import {webToast} from "@/Utilities/webtoast";
-import InputError from '@/Components/InputError.vue';
+import PrimaryButton from '@/Admin/Components/PrimaryButton.vue';
+import {webToast} from "@/Admin/Utilities/webtoast";
+import InputError from '@/Admin/Components/InputError.vue';
 import NProgress from 'nprogress'
 
 
@@ -382,7 +382,7 @@ EOT
         File::put($support->supportJSPath, <<<EOT
 import {router, useForm} from "@inertiajs/vue3";
 import NProgress from 'nprogress'
-import {webToast} from "@/Utilities/webtoast";
+import {webToast} from "@/Admin/Utilities/webtoast";
 
 export const deleteData = async (item, index) => {
     const confirm = webToast.confirm("Are You sure to delete?")

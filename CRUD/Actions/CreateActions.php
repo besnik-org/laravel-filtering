@@ -57,7 +57,7 @@ class CreateActions
         $actionCode .= "    public function execute(): array\n";
         $actionCode .= "    {\n";
         $actionCode .= "        return [ \n";
-        $actionCode .= "           '{$returnModelAlias}' => {$crudSupports->name}::query()->paginate(20)\n";
+        $actionCode .= "           '{$returnModelAlias}' => {$crudSupports->name}::query()->orderBy('id', 'desc')->paginate(20)\n";
         $actionCode .= "         ];\n";
         $actionCode .= "    }\n";
         $actionCode .= "}\n";
@@ -83,6 +83,7 @@ class CreateActions
         $actionCode = "<?php\n\n";
         $actionCode .= "namespace {$actionStoreSupports->namespace};\n\n";
         $actionCode .= "use {$modelSupport->namespace}\\{$crudSupports->name};\n";
+        $actionCode .= "use Illuminate\Http\RedirectResponse;\n";
         $actionCode .= "use {$dtoSupport->namespace}\\{$dtoSupport->name};\n\n";
 
         $actionCode .= "class {$actionStoreSupports->name}\n";
@@ -93,16 +94,16 @@ class CreateActions
         $dtoAlias = Str::camel($dtoSupport->name);
         $storeDependency = "{$dtoSupport->name} \${$dtoAlias}";
 
-        $actionCode .= "    public function execute({$storeDependency})\n";
+        $actionCode .= "    public function execute({$storeDependency}): RedirectResponse\n";
         $actionCode .= "    {\n";
         $actionCode .= "    \${$returnModelAlias} = new {$crudSupports->name}();\n";
         foreach ($crudSupports->crudDto->fields as $field) {
             /** @var CrudFieldDto $field */
-            $actionCode .= "    \${$returnModelAlias}->{$field->name} = \${$dtoAlias}->{$field->name};\n";
+            $actionCode .= "       \${$returnModelAlias}->{$field->name} = \${$dtoAlias}->{$field->name};\n";
         }
 
-        $actionCode .= "    \${$returnModelAlias}->save();\n";
-        $actionCode .= "    return \${$returnModelAlias};\n";
+        $actionCode .= "       \${$returnModelAlias}->save();\n\n";
+        $actionCode .= "       return \${$returnModelAlias};\n";
         $actionCode .= "    }\n";
         $actionCode .= "}\n";
 
@@ -126,6 +127,7 @@ class CreateActions
         $actionCode = "<?php\n\n";
         $actionCode .= "namespace {$actionUpdateSupports->namespace};\n\n";
         $actionCode .= "use {$modelSupport->namespace}\\{$crudSupports->name};\n";
+        $actionCode .= "use Illuminate\Http\RedirectResponse;\n";
         $actionCode .= "use {$dtoSupport->namespace}\\{$dtoSupport->name};\n\n";
 
         $actionCode .= "class {$actionUpdateSupports->name}\n";
@@ -137,16 +139,17 @@ class CreateActions
         $dependency = "{$dtoSupport->name} \${$dtoAlias}";
         $dependency .= ", {$crudSupports->name} \${$returnModelAlias}";
 
-        $actionCode .= "    public function execute({$dependency})\n";
+        $actionCode .= "    public function execute({$dependency}): RedirectResponse\n";
         $actionCode .= "    {\n";
 
         foreach ($crudSupports->crudDto->fields as $field) {
             /** @var CrudFieldDto $field */
-            $actionCode .= "    \${$returnModelAlias}->{$field->name} = \${$dtoAlias}->{$field->name};\n";
+            $actionCode .= "       \${$returnModelAlias}->{$field->name} = \${$dtoAlias}->{$field->name};\n";
         }
 
-        $actionCode .= "    \${$returnModelAlias}->update();\n";
-        $actionCode .= "    return \${$returnModelAlias};\n";
+        $actionCode .= "       \${$returnModelAlias}->update();\n\n";
+        $actionCode .= "           \${$returnModelAlias};\n";
+        $actionCode .= "       return redirect(route('{$crudSupports->route}.index'));\n";
         $actionCode .= "    }\n";
         $actionCode .= "}\n";
 
@@ -170,17 +173,24 @@ class CreateActions
 
         $actionCode = "<?php\n\n";
         $actionCode .= "namespace {$actionDeleteSupports->namespace};\n\n";
-        $actionCode .= "use {$modelSupport->namespace}\\{$crudSupports->name};\n";
+        $actionCode .= "use Illuminate\Http\RedirectResponse;\n";
+        $actionCode .= "use {$modelSupport->namespace}\\{$crudSupports->name};\n\n";
 
         $actionCode .= "class {$actionDeleteSupports->name}\n";
         $actionCode .= "{\n";
 
         $returnModelAlias = Str::camel($crudSupports->name);
-        $dependency = "{$crudSupports->name} \${$returnModelAlias}";
+        $dependency = "{$crudSupports->name} \${$returnModelAlias}\n";
 
-        $actionCode .= "    public function execute({$dependency})\n";
+        $actionCode .= "    public function execute({$dependency}): RedirectResponse\n";
         $actionCode .= "    {\n";
+        $actionCode .= "     try {\n";
+        $actionCode .= "      \${$returnModelAlias}->delete()";
+        $actionCode .= "     } catch (Exception \$exception) {\n\n";
+        $actionCode .= "      return redirect()->back()->withErrors(['error' => \$exception->getMessage()])\n";
 
+        $actionCode .= "     }\n\n";
+        $actionCode .= "     return redirect()->back();\n";
         $actionCode .= "    }\n";
         $actionCode .= "}\n";
 

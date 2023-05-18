@@ -14,7 +14,7 @@ class FieldType
         'file' => 'string',
         'checkbox' => 'bool',
         'select_enum' => 'string',
-        'select' => 'foreign',
+        'select' => 'foreignId',
     ];
 
     private static array $typesForPhp = [

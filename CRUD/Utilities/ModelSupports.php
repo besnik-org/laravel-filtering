@@ -26,7 +26,7 @@ class ModelSupports
         foreach ($this->crudSupports->crudDto->fields as $field) {
             /** @var  CrudFieldDto $field */
 
-            $type = FieldType::from($field->type);
+            $type = FieldType::fromPhp($field->type);
             $this->fillAbleFields .= "'{$field->name}', ";
 
             $this->docblock .= " * @property ".$type.(!$field->required ? '|null' : '')." ".'$'.$field->name."\n";

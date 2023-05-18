@@ -29,6 +29,7 @@ class CreateMigration
         $migrationCode .= "    {\n";
         $migrationCode .= "        Schema::create('{$crudSupports->tableName}', function (Blueprint \$table) {\n";
 
+        $migrationCode .= "            \$table->id();\n";
         $migrationCode .= $migrationSupport->fieldsString();
 
         $migrationCode .= "            \$table->timestamps();\n";
