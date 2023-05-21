@@ -54,7 +54,7 @@ EOT;
      * @param $name
      * @return string
      */
-    private static function numberField(string $label, $name): string
+    public static function numberField(string $label, $name): string
     {
         return <<<EOT
 
@@ -105,7 +105,7 @@ EOT;
 EOT;
     }
 
-    private static function file(string $label, $name): string
+    public static function file(string $label, $name): string
     {
         return <<<EOT
 
@@ -118,7 +118,7 @@ EOT;
 EOT;
     }
 
-    private static function checkbox(string $label, $name): string
+    public static function checkbox(string $label, $name): string
     {
         return <<<EOT
 
