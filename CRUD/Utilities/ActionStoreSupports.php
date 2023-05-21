@@ -19,9 +19,9 @@ class ActionStoreSupports
     public function generate(): void
     {
         $name = $this->crudSupports->name;
-        $this->namespace = "App\Actions\CRUD".($this->crudSupports->extraNamespace ? '\\'.$this->crudSupports->extraNamespace : '')."\\{$name}";
+        $this->namespace = "App\Actions\Admin".($this->crudSupports->extraNamespace ? '\\'.$this->crudSupports->extraNamespace : '')."\\{$name}";
 
-        $this->path = app_path("Actions/CRUD/".($this->crudSupports->extraNamespace ? $this->crudSupports->extraNamespace.'/' : '')."{$name}/");
+        $this->path = app_path("Actions/Admin/".($this->crudSupports->extraNamespace ? $this->crudSupports->extraNamespace.'/' : '')."{$name}/");
         $this->name = $this->type.'Action';
         $this->fullPath = $this->path.$this->name.'.php';
 

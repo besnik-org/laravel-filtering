@@ -18,9 +18,9 @@ class DtoSupports
 
     public function generate(): void
     {
-        $this->namespace = "App\DTO\CRUD".($this->crudSupports->extraNamespace ? '\\'.$this->crudSupports->extraNamespace : '');
+        $this->namespace = "App\DTO\Admin".($this->crudSupports->extraNamespace ? '\\'.$this->crudSupports->extraNamespace : '');
 
-        $this->path = app_path("DTO/CRUD/".($this->crudSupports->extraNamespace ? $this->crudSupports->extraNamespace.'/' : ''));
+        $this->path = app_path("DTO/CRUD/Admin/".($this->crudSupports->extraNamespace ? $this->crudSupports->extraNamespace.'/' : ''));
         $this->name = $this->crudSupports->name.'Dto';
         $this->fullPath = $this->path.$this->name.'.php';
 

@@ -19,9 +19,9 @@ class RequestSupports
 
     public function generate(): void
     {
-        $this->namespace = "App\Http\Requests".($this->crudSupports->extraNamespace ? '\\'.$this->crudSupports->extraNamespace : '');
+        $this->namespace = "App\Http\Requests\Admin".($this->crudSupports->extraNamespace ? '\\'.$this->crudSupports->extraNamespace : '');
 
-        $this->path = app_path("Http/Requests/".($this->crudSupports->extraNamespace ? $this->crudSupports->extraNamespace.'/' : ''));
+        $this->path = app_path("Http/Requests/Admin/".($this->crudSupports->extraNamespace ? $this->crudSupports->extraNamespace.'/' : ''));
         $this->name = $this->crudSupports->name.'Request';
         $this->fullPath = $this->path.$this->name.'.php';
 

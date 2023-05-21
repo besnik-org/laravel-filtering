@@ -18,9 +18,9 @@ class ControllerSupports
 
     public function generate(): void
     {
-        $this->namespace = "App\Http\Controllers\CRUD".($this->crudSupports->extraNamespace ? '\\'.$this->crudSupports->extraNamespace : '');
+        $this->namespace = "App\Http\Controllers\Admin".($this->crudSupports->extraNamespace ? '\\'.$this->crudSupports->extraNamespace : '');
 
-        $this->path = app_path("Http/Controllers/CRUD/".($this->crudSupports->extraNamespace ? $this->crudSupports->extraNamespace.'/' : ''));
+        $this->path = app_path("Http/Controllers/Admin/".($this->crudSupports->extraNamespace ? $this->crudSupports->extraNamespace.'/' : ''));
         $this->name = $this->crudSupports->name.'Controller';
         $this->fullPath = $this->path.$this->name.'.php';
 
