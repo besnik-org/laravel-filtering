@@ -55,7 +55,7 @@ class CreateDto
 
     public function createDtoContract(): void
     {
-        $filePath = app_path('DTO/Admin/DtoAbstraction.php');
+        $filePath = app_path('DTO/DtoAbstraction.php');
 
         File::ensureDirectoryExists(app_path('DTO/Admin'));
 
@@ -64,7 +64,7 @@ class CreateDto
         }
 
         $fileContent = "<?php\n\n";
-        $fileContent .= "namespace App\DTO\CRUD;\n\n";
+        $fileContent .= "namespace App\DTO;\n\n";
         $fileContent .= "abstract class DtoAbstraction\n";
         $fileContent .= "{\n";
         $fileContent .= "    public function all(): array\n";
