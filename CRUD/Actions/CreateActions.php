@@ -55,10 +55,11 @@ namespace {$actionIndexSupports->namespace};
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use {$modelSupport->namespace}\\{$crudSupports->name};
+use Inertia\Inertia;
 
 class {$actionIndexSupports->name}
 {
-    public function execute(): Response
+    public function execute(): \Inertia\Response
     {
         return Inertia::render('{$crudSupports->name}/Index',
             [
@@ -90,13 +91,13 @@ EOT);
         $dtoAlias = Str::camel($dtoSupport->name);
         $storeDependency = "{$dtoSupport->name} \${$dtoAlias}";
 
-        $modelStore = "    \${$returnModelAlias} = new {$crudSupports->name}();\n";
+        $modelStore = "       \${$returnModelAlias} = new {$crudSupports->name}();\n";
         foreach ($crudSupports->crudDto->fields as $field) {
             /** @var CrudFieldDto $field */
             $modelStore .= "       \${$returnModelAlias}->{$field->name} = \${$dtoAlias}->{$field->name};\n";
         }
 
-        $modelStore .= "       \${$returnModelAlias}->save();\n\n";
+        $modelStore .= "       \${$returnModelAlias}->save();";
 
         File::put($actionStoreSupports->fullPath, <<<EOT
 <?php
@@ -112,7 +113,6 @@ class {$actionStoreSupports->name}
 {
     public function execute({$storeDependency}): RedirectResponse
     {
-    
  {$modelStore}
  
        return redirect()->back();
@@ -147,7 +147,7 @@ EOT);
             $modelStore .= "       \${$returnModelAlias}->{$field->name} = \${$dtoAlias}->{$field->name};\n";
         }
 
-        $modelStore .= "       \${$returnModelAlias}->update();\n\n";
+        $modelStore .= "        \${$returnModelAlias}->update();";
 
 
 
@@ -165,7 +165,6 @@ class {$actionUpdateSupports->name}
 {
     public function execute({$dependency}): RedirectResponse
     {
-    
  {$modelStore}
  
        return redirect()->back();
@@ -190,7 +189,7 @@ EOT);
         }
 
         $returnModelAlias = Str::camel($crudSupports->name);
-        $dependency = "{$crudSupports->name} \${$returnModelAlias}\n";
+        $dependency = "{$crudSupports->name} \${$returnModelAlias}";
 
         File::put($actionDeleteSupports->fullPath, <<<EOT
 <?php

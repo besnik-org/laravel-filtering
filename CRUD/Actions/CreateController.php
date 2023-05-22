@@ -68,7 +68,7 @@ class CreateController
         $actionIndexAlias = Str::camel($actionIndexSupports->name);
         $requestCode .= "    public function index({$actionIndexSupports->name} \${$actionIndexAlias}): \Inertia\Response\n";
         $requestCode .= "    {\n";
-        $requestCode .= "        return Inertia::render('{$crudSupports->name}/Index', \${$actionIndexAlias}->execute());\n";
+        $requestCode .= "        return \${$actionIndexAlias}->execute();\n";
         $requestCode .= "    }\n\n";
 
         // store method
