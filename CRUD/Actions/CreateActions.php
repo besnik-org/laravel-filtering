@@ -39,33 +39,38 @@ class CreateActions
         ModelSupports $modelSupport,
         CrudSupports $crudSupports
     ): void {
-// Check if the DTO already exists
+
         if (File::exists($actionIndexSupports->fullPath)) {
             MessageBucket::addError("Action {$actionIndexSupports->name} Already exist");
             return;
         }
 
-        $actionCode = "<?php\n\n";
-        $actionCode .= "namespace {$actionIndexSupports->namespace};\n\n";
-        $actionCode .= "use {$modelSupport->namespace}\\{$crudSupports->name};\n\n";
-
-        $actionCode .= "class {$actionIndexSupports->name}\n";
-        $actionCode .= "{\n";
-
         $returnModelAlias = Str::camel($crudSupports->name);
 
-        $actionCode .= "    public function execute(): array\n";
-        $actionCode .= "    {\n";
-        $actionCode .= "        return [ \n";
-        $actionCode .= "           '{$returnModelAlias}' => {$crudSupports->name}::query()->orderBy('id', 'desc')->paginate(20)\n";
-        $actionCode .= "         ];\n";
-        $actionCode .= "    }\n";
-        $actionCode .= "}\n";
+        File::put($actionIndexSupports->fullPath, <<<EOT
+<?php
 
-        File::put($actionIndexSupports->fullPath, $actionCode);
+namespace {$actionIndexSupports->namespace};
+
+use Exception;
+use Illuminate\Http\RedirectResponse;
+use {$modelSupport->namespace}\\{$crudSupports->name};
+
+class {$actionIndexSupports->name}
+{
+    public function execute(): Response
+    {
+        return Inertia::render('{$crudSupports->name}/Index',
+            [
+                '{$returnModelAlias}' => {$crudSupports->name}::query()->orderBy('id', 'desc')->paginate(20)
+            ]);
+    }
+}
+
+EOT);
 
         MessageBucket::addInfo("Action {$actionIndexSupports->name} Created");
-    }
+  }
 
 
     public function createStoreAction(
@@ -80,35 +85,41 @@ class CreateActions
             return;
         }
 
-        $actionCode = "<?php\n\n";
-        $actionCode .= "namespace {$actionStoreSupports->namespace};\n\n";
-        $actionCode .= "use {$modelSupport->namespace}\\{$crudSupports->name};\n";
-        $actionCode .= "use Illuminate\Http\RedirectResponse;\n";
-        $actionCode .= "use {$dtoSupport->namespace}\\{$dtoSupport->name};\n\n";
-
-        $actionCode .= "class {$actionStoreSupports->name}\n";
-        $actionCode .= "{\n";
-
         $returnModelAlias = Str::camel($crudSupports->name);
 
         $dtoAlias = Str::camel($dtoSupport->name);
         $storeDependency = "{$dtoSupport->name} \${$dtoAlias}";
 
-        $actionCode .= "    public function execute({$storeDependency}): RedirectResponse\n";
-        $actionCode .= "    {\n";
-        $actionCode .= "    \${$returnModelAlias} = new {$crudSupports->name}();\n";
+        $modelStore = "    \${$returnModelAlias} = new {$crudSupports->name}();\n";
         foreach ($crudSupports->crudDto->fields as $field) {
             /** @var CrudFieldDto $field */
-            $actionCode .= "       \${$returnModelAlias}->{$field->name} = \${$dtoAlias}->{$field->name};\n";
+            $modelStore .= "       \${$returnModelAlias}->{$field->name} = \${$dtoAlias}->{$field->name};\n";
         }
 
-        $actionCode .= "       \${$returnModelAlias}->save();\n\n";
-        $actionCode .= "       return \${$returnModelAlias};\n";
-        $actionCode .= "    }\n";
-        $actionCode .= "}\n";
+        $modelStore .= "       \${$returnModelAlias}->save();\n\n";
 
-        File::put($actionStoreSupports->fullPath, $actionCode);
+        File::put($actionStoreSupports->fullPath, <<<EOT
+<?php
 
+namespace {$actionStoreSupports->namespace};
+
+use Exception;
+use Illuminate\Http\RedirectResponse;
+use {$modelSupport->namespace}\\{$crudSupports->name};
+use {$dtoSupport->namespace}\\{$dtoSupport->name};
+
+class {$actionStoreSupports->name}
+{
+    public function execute({$storeDependency}): RedirectResponse
+    {
+    
+ {$modelStore}
+ 
+       return redirect()->back();
+    }
+}
+
+EOT);
         MessageBucket::addInfo("Action {$actionStoreSupports->name}  Created");
     }
 
@@ -124,37 +135,44 @@ class CreateActions
             return;
         }
 
-        $actionCode = "<?php\n\n";
-        $actionCode .= "namespace {$actionUpdateSupports->namespace};\n\n";
-        $actionCode .= "use {$modelSupport->namespace}\\{$crudSupports->name};\n";
-        $actionCode .= "use Illuminate\Http\RedirectResponse;\n";
-        $actionCode .= "use {$dtoSupport->namespace}\\{$dtoSupport->name};\n\n";
-
-        $actionCode .= "class {$actionUpdateSupports->name}\n";
-        $actionCode .= "{\n";
-
         $dtoAlias = Str::camel($dtoSupport->name);
         $returnModelAlias = Str::camel($crudSupports->name);
 
         $dependency = "{$dtoSupport->name} \${$dtoAlias}";
         $dependency .= ", {$crudSupports->name} \${$returnModelAlias}";
 
-        $actionCode .= "    public function execute({$dependency}): RedirectResponse\n";
-        $actionCode .= "    {\n";
+       $modelStore = "";
 
         foreach ($crudSupports->crudDto->fields as $field) {
-            /** @var CrudFieldDto $field */
-            $actionCode .= "       \${$returnModelAlias}->{$field->name} = \${$dtoAlias}->{$field->name};\n";
+            $modelStore .= "       \${$returnModelAlias}->{$field->name} = \${$dtoAlias}->{$field->name};\n";
         }
 
-        $actionCode .= "       \${$returnModelAlias}->update();\n\n";
-        $actionCode .= "           \${$returnModelAlias};\n";
-        $actionCode .= "       return redirect(route('{$crudSupports->route}.index'));\n";
-        $actionCode .= "    }\n";
-        $actionCode .= "}\n";
+        $modelStore .= "       \${$returnModelAlias}->update();\n\n";
 
-        File::put($actionUpdateSupports->fullPath, $actionCode);
 
+
+        File::put($actionUpdateSupports->fullPath, <<<EOT
+<?php
+
+namespace {$actionUpdateSupports->namespace};
+
+use Exception;
+use Illuminate\Http\RedirectResponse;
+use {$modelSupport->namespace}\\{$crudSupports->name};
+use {$dtoSupport->namespace}\\{$dtoSupport->name};
+
+class {$actionUpdateSupports->name}
+{
+    public function execute({$dependency}): RedirectResponse
+    {
+    
+ {$modelStore}
+ 
+       return redirect()->back();
+    }
+}
+
+EOT);
         MessageBucket::addInfo("Action {$actionUpdateSupports->name}  created");
     }
 
@@ -165,37 +183,39 @@ class CreateActions
         CrudSupports $crudSupports,
         DtoSupports $dtoSupport
     ): void {
-        // Check if the DTO already exists
+
         if (File::exists($actionDeleteSupports->fullPath)) {
             MessageBucket::addError("Action {$actionDeleteSupports->name}  Already exist");
             return;
         }
 
-        $actionCode = "<?php\n\n";
-        $actionCode .= "namespace {$actionDeleteSupports->namespace};\n\n";
-        $actionCode .= "use Illuminate\Http\RedirectResponse;\n";
-        $actionCode .= "use {$modelSupport->namespace}\\{$crudSupports->name};\n\n";
-
-        $actionCode .= "class {$actionDeleteSupports->name}\n";
-        $actionCode .= "{\n";
-
         $returnModelAlias = Str::camel($crudSupports->name);
         $dependency = "{$crudSupports->name} \${$returnModelAlias}\n";
 
-        $actionCode .= "    public function execute({$dependency}): RedirectResponse\n";
-        $actionCode .= "    {\n";
-        $actionCode .= "     try {\n";
-        $actionCode .= "      \${$returnModelAlias}->delete()";
-        $actionCode .= "     } catch (Exception \$exception) {\n\n";
-        $actionCode .= "      return redirect()->back()->withErrors(['error' => \$exception->getMessage()])\n";
+        File::put($actionDeleteSupports->fullPath, <<<EOT
+<?php
 
-        $actionCode .= "     }\n\n";
-        $actionCode .= "     return redirect()->back();\n";
-        $actionCode .= "    }\n";
-        $actionCode .= "}\n";
+namespace App\Actions\Admin\Category;
 
-        File::put($actionDeleteSupports->fullPath, $actionCode);
+use Exception;
+use Illuminate\Http\RedirectResponse;
+use {$modelSupport->namespace}\\{$crudSupports->name};
 
+class {$actionDeleteSupports->name}
+{
+    public function execute({$dependency}): RedirectResponse
+    {
+        try {
+            \${$returnModelAlias}->delete();
+        } catch (Exception \$exception) {
+            return redirect()->back()->withErrors(['error' => \$exception->getMessage()]);
+        }
+
+        return redirect()->back();
+    }
+}
+
+EOT);
         MessageBucket::addInfo("Action {$actionDeleteSupports->name}  created");
     }
 

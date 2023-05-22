@@ -18,6 +18,12 @@ class CrudDto extends DtoAbstraction
     public bool $createInertiaCreateModal;
     public bool $createInertiaUpdateModal;
     public bool $createInertiaDeletePrompt;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, CrudFieldDto>
+     */
     public array $fields;
     public string $route;
 

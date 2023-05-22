@@ -80,7 +80,7 @@ class CreateController
 
         $requestCode .= "    public function store(".$storeDependency."): RedirectResponse\n";
         $requestCode .= "    {\n";
-        $requestCode .= "        return \${$actionStoreAlias}->execute(\${$dtoAlias});\n"; 
+        $requestCode .= "        return \${$actionStoreAlias}->execute(\${$dtoAlias});\n";
         $requestCode .= "    }\n\n";
 
 
