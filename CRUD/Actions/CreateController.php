@@ -74,8 +74,8 @@ class CreateController
         // store method
         $actionStoreAlias = Str::camel($actionStoreSupports->name);
 
-        $storeDependency = ", {$requestSupport->name} \${$requestAlias}";
-        $storeDependency .= "{$dtoSupport->name} \${$dtoAlias}";
+        $storeDependency = "{$requestSupport->name} \${$requestAlias}";
+        $storeDependency .= ", {$dtoSupport->name} \${$dtoAlias}";
         $storeDependency .= ", {$actionStoreSupports->name} \${$actionStoreAlias}";
 
         $requestCode .= "    public function store(".$storeDependency."): RedirectResponse\n";
@@ -90,8 +90,8 @@ class CreateController
 
         $modelAlias = Str::camel($crudSupports->name);
 
-        $updateDependency = ", {$requestSupport->name} \${$requestAlias}";
-        $updateDependency .= "{$dtoSupport->name} \${$dtoAlias}";
+        $updateDependency = "{$requestSupport->name} \${$requestAlias}";
+        $updateDependency .= ", {$dtoSupport->name} \${$dtoAlias}";
         $updateDependency .= ", {$actionUpdateSupports->name} \${$actionUpdateAlias}";
         $updateDependency .= ", {$crudSupports->name} \${$modelAlias}";
 

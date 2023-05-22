@@ -20,7 +20,7 @@ class DtoSupports
     {
         $this->namespace = "App\DTO\Admin".($this->crudSupports->extraNamespace ? '\\'.$this->crudSupports->extraNamespace : '');
 
-        $this->path = app_path("DTO/CRUD/Admin/".($this->crudSupports->extraNamespace ? $this->crudSupports->extraNamespace.'/' : ''));
+        $this->path = app_path("DTO/Admin/".($this->crudSupports->extraNamespace ? $this->crudSupports->extraNamespace.'/' : ''));
         $this->name = $this->crudSupports->name.'Dto';
         $this->fullPath = $this->path.$this->name.'.php';
 

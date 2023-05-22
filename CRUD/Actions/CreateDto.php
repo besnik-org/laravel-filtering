@@ -25,7 +25,7 @@ class CreateDto
         // Create the DTO file dynamically
         $dtoCode = "<?php\n\n";
         $dtoCode .= "namespace {$dtoSupport->namespace};\n\n";
-        $dtoCode .= "use App\DTO\CRUD\DtoAbstraction;\n\n";
+        $dtoCode .= "use App\DTO\Admin\DtoAbstraction;\n\n";
         $dtoCode .= "class {$dtoSupport->name} extends DtoAbstraction\n";
         $dtoCode .= "{\n";
         $dtoAssign = '';
@@ -55,9 +55,9 @@ class CreateDto
 
     public function createDtoContract(): void
     {
-        $filePath = app_path('DTO/CRUD/DtoAbstraction.php');
+        $filePath = app_path('DTO/Admin/DtoAbstraction.php');
 
-        File::ensureDirectoryExists(app_path('DTO/CRUD'));
+        File::ensureDirectoryExists(app_path('DTO/Admin'));
 
         if (File::exists($filePath)) {
             return;
