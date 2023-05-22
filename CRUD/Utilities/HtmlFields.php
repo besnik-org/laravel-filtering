@@ -46,7 +46,7 @@ EOT;
 
     public static function number($name, $label): string
     {
-        return self::numberField($label, $name);
+        return self::numberField($name, $label);
     }
 
     /**
@@ -54,7 +54,7 @@ EOT;
      * @param $name
      * @return string
      */
-    public static function numberField(string $label, $name): string
+    public static function numberField($name, $label): string
     {
         return <<<EOT
 
@@ -69,12 +69,12 @@ EOT;
 
     public static function number_large($name, $label): string
     {
-        return self::numberField($label, $name);
+        return self::numberField($name, $label);
     }
 
     public static function decimal_number($name, $label): string
     {
-        return self::numberField($label, $name);
+        return self::numberField($name, $label);
     }
 
     public static function select_enum($name, string $label): string
@@ -118,7 +118,7 @@ EOT;
 EOT;
     }
 
-    public static function checkbox(string $label, $name): string
+    public static function checkbox($name, $label): string
     {
         return <<<EOT
 
