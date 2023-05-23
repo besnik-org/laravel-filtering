@@ -191,7 +191,7 @@ EOT
 <template>
   <Modal uid="create"  :outsideClick="false">
     <template v-slot:title>
-      Create Server
+      Create {$crudSupports->name}
     </template>
 
     <template v-slot:body>
@@ -220,23 +220,27 @@ import {onMounted, ref, watch} from "vue";
 import PrimaryButton from '@/Admin/Components/PrimaryButton.vue';
 import {webToast} from "@/Admin/Utilities/webtoast";
 import InputError from '@/Admin/Components/InputError.vue';
+import Checkbox from '@/Admin/Components/Checkbox.vue';
 import NProgress from 'nprogress'
-
 
 const props = defineProps({
   data: Object,
+  companies: Array
 })
 
+let crud = ref({...props.data});
 let form = useForm({...props.data});
 const errors = ref({});
 
 watch(() => props.data, (newData) => {
-  form = useForm({...newData})
+  crud.value =  {...newData}
 });
 
 const submit = () => {
   NProgress.start();
-  form.post(route('{$crudSupports->route}.store'), {
+  form.transform((data) => ({
+    ...crud.value,
+  })).post(route('{$crudSupports->route}.store'), {
     onFinish: () => form.reset(),
     onError: (error) => {
       errors.value =  error
@@ -246,7 +250,7 @@ const submit = () => {
       })
     },
     onSuccess: () => {
-      closeModal('update')
+      closeModal('create')
       webToast.Success({
         status:'Wow !',
         message:'Operation Success'
@@ -286,7 +290,7 @@ EOT
 <template>
   <Modal uid="update"  :outsideClick="false">
     <template v-slot:title>
-      Create Server
+      Update {$crudSupports->name}
     </template>
 
     <template v-slot:body>
@@ -309,12 +313,13 @@ EOT
 </template>
 
 <script setup>
-import { useForm} from '@inertiajs/vue3';
+import {useForm} from '@inertiajs/vue3';
 import {Modal, openModal, closeModal} from '@/Admin/Components/InteractiveUI/Modal';
 import {onMounted, ref, watch} from "vue";
 import PrimaryButton from '@/Admin/Components/PrimaryButton.vue';
 import {webToast} from "@/Admin/Utilities/webtoast";
 import InputError from '@/Admin/Components/InputError.vue';
+import Checkbox from '@/Admin/Components/Checkbox.vue';
 import NProgress from 'nprogress'
 
 
@@ -322,29 +327,32 @@ const props = defineProps({
   data: Object,
 })
 
-let form = useForm({...props.data});
+let crud = ref({...props.data});
+let form = useForm({});
 const errors = ref({});
 
 watch(() => props.data, (newData) => {
-  form = useForm({...newData})
+  crud.value = {...newData}
 });
 
 const submit = () => {
   NProgress.start();
-  form.post(route('{$crudSupports->route}.store'), {
+  form.transform((data) => ({
+    ...crud.value,
+  })).put(route('{$crudSupports->route}.update', crud.value.id), {
     onFinish: () => form.reset(),
     onError: (error) => {
-      errors.value =  error
+      errors.value = error
       webToast.Info({
-        status:'Ops !',
-        message:'Something went wrong.'
+        status: 'Ops !',
+        message: 'Something went wrong.'
       })
     },
     onSuccess: () => {
-      closeModal()
+      closeModal('update')
       webToast.Success({
-        status:'Wow !',
-        message:'Operation Success'
+        status: 'Wow !',
+        message: 'Operation Success'
       })
     }
   });

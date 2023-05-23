@@ -11,7 +11,7 @@ class HtmlFields
 
           <div class=" w-full mb-3 ">
             <label  class="input-label">{$label}</label>
-            <input type="text" v-model="form.{$name}" class="input-field" placeholder="{$label}"/>
+            <input type="text" v-model="crud.{$name}" class="input-field" placeholder="{$label}"/>
             <InputError class="mt-2" :message="form.errors.{$name}" />
           </div>
 
@@ -24,7 +24,7 @@ EOT;
 
           <div class=" w-full mb-3 ">
             <label  class="input-label">{$label}</label>
-            <textarea  v-model="form.{$name}" class="input-field" placeholder="{$label}"/>
+            <textarea  v-model="crud.{$name}" class="input-field" placeholder="{$label}"/>
             <InputError class="mt-2" :message="form.errors.{$name}" />
           </div>
 
@@ -37,7 +37,7 @@ EOT;
 
           <div class=" w-full mb-3 ">
             <label  class="input-label">{$label}</label>
-            <input type="text" v-model="form.{$name}" class="input-field" placeholder="{$label}"/>
+            <input type="text" v-model="crud.{$name}" class="input-field" placeholder="{$label}"/>
             <InputError class="mt-2" :message="form.errors.{$name}" />
           </div>
 
@@ -60,7 +60,7 @@ EOT;
 
           <div class=" w-full mb-3 ">
             <label  class="input-label">{$label}</label>
-            <input type="number" v-model="form.{$name}" class="input-field" placeholder="{$label}"/>
+            <input type="number" v-model="crud.{$name}" class="input-field" placeholder="{$label}"/>
             <InputError class="mt-2" :message="form.errors.{$name}" />
           </div>
 
@@ -83,7 +83,7 @@ EOT;
 
           <div class=" w-full mb-3 ">
             <label  class="input-label">{$label}</label>
-            <input type="file" v-model="form.{$name}" class="input-field" placeholder="{$label}"/>
+            <input type="file" v-model="crud.{$name}" class="input-field" placeholder="{$label}"/>
             <InputError class="mt-2" :message="form.errors.{$name}" />
           </div>
 
@@ -94,9 +94,9 @@ EOT;
     {
         return <<<EOT
 
-          <div class=" w-full mb-3 " xmlns="http://www.w3.org/1999/html">
+          <div class=" w-full mb-3 " >
             <label  class="input-label">{$label}</label>
-            <select  v-model="form.{$name}" class="input-field"  >
+            <select  v-model="crud.{$name}" class="input-field"  >
               <option value=""> Select </option>
             </select>
             <InputError class="mt-2" :message="form.errors.{$name}" />
@@ -111,7 +111,7 @@ EOT;
 
           <div class=" w-full mb-3 ">
             <label  class="input-label">{$label}</label>
-            <input type="file" v-model="form.{$name}" class="input-field" placeholder="{$label}"/>
+            <input type="file" v-model="crud.{$name}" class="input-field" placeholder="{$label}"/>
             <InputError class="mt-2" :message="form.errors.{$name}" />
           </div>
 
@@ -124,8 +124,8 @@ EOT;
 
           <div class=" w-full mb-3 ">  
             <label class="flex items-center">
-                <Checkbox v-model="form.{$name}" v-model:checked="form.{$name}" />
-                <span class="input-label  ">{{$label}}</span>
+                <Checkbox v-model="crud.{$name}" v-model:checked="crud.{$name}" />
+                <span class="input-label pt-[8px] pl-[5px]">{ $label }</span>
             </label> 
             <InputError class="mt-2" :message="form.errors.{$name}" />
         </div>
