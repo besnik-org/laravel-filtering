@@ -4,7 +4,12 @@ declare(strict_types=1);
 namespace Besnik\LaravelFiltering\Filtering\Contracts;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
+/**
+ * @method string apply()
+ * @method string fields()
+ */
 abstract class FieldContract
 {
     /**
@@ -19,11 +24,10 @@ abstract class FieldContract
     protected string $type;
 
     protected array $data = [
-        'conditions' => [],
-        'config' => [],
+        'conditions' => []
     ];
 
-    protected array $conditions = [];
+  //  protected array $conditions = [];
 
     public function __construct(
         protected Builder $query,
@@ -52,23 +56,9 @@ abstract class FieldContract
         return $this->request->input($name);
     }
 
-    public function title($title): self
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
     public function placeholder($text): self
     {
         $this->placeholder = $text;
-
-        return $this;
-    }
-
-    public function class($cssClass): self
-    {
-        $this->cssClass = $cssClass;
 
         return $this;
     }
@@ -95,8 +85,6 @@ abstract class FieldContract
 
         return true;
     }
-
-    abstract protected function setQueryWithCondition();
 
     protected function getFields(): array
     {

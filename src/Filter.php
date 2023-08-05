@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Besnik\LaravelFiltering;
@@ -14,37 +15,37 @@ use Illuminate\Database\Query\Builder as DBBuilder;
 
 class Filter
 {
-    public array $fields = [];
+    private array $fields = [];
 
-    protected Builder|DBBuilder|Model $query;
+    public Builder|DBBuilder|Model $query;
 
-    public function addModel(string $model): self
+    public function __construct(Builder|DBBuilder|Model|string $model)
     {
-        /** @var Model $model */
-        $this->query = ($model)::query();
-
-        return $this;
+        $this->setModel($model);
     }
 
-    public function addQuery(Builder|DBBuilder $builder): self
-    {
-        $this->query = $builder;
 
-        return $this;
+    private function setModel(Builder|DBBuilder|Model|string $model): void
+    {
+        if (is_string($model)) {
+            $this->query =   $model::query();
+            return;
+        }
+
+        if ($model instanceof Model) {
+            $this->query = ($model)->query();
+            return;
+        }
+
+        $this->query = $model;
     }
 
-    /**
-     * @param $function
-     */
-    public function textField(string $name, $title = null, $operator = '='): Text
+    public function text(string $name, $title = null, $operator = '='): Text
     {
         return $this->fields[$name] = new Text($this->query, $name, $title, $operator);
     }
 
-    /**
-     * @param $function
-     */
-    public function optionFiled(string $name, $title = null, $operator = '='): Option
+    public function option(string $name, $title = null, $operator = '='): Option
     {
         return $this->fields[$name] = new Option($this->query, $name, $title, $operator);
     }

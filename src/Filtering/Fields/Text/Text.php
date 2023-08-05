@@ -5,73 +5,21 @@ namespace Besnik\LaravelFiltering\Filtering\Fields\Text;
 
 use Besnik\LaravelFiltering\Filtering\Contracts\FieldContract;
 use Besnik\LaravelFiltering\Filtering\Enums\Condition;
+use Illuminate\Database\Eloquent\Collection;
 
 class Text extends FieldContract
 {
     protected string $type = 'text';
+    protected mixed $conditions;
 
-    public function allConditions()
+    public function conditions(callable $callable): self
     {
-        $this->equal();
-        $this->notEqual();
-        $this->contain();
-        $this->startWith();
-        $this->endWith();
-        $this->in();
-        $this->notIn();
+      call_user_func($callable);
+
+      return $this;
     }
 
-    public function notEqual(string $title = 'Not Equal'): self
-    {
-        $this->data['conditions'][Condition::NOT_EQUAL->value] = ['title' => $title];
-
-        return $this;
-    }
-
-    public function contain(string $title = 'Contain'): self
-    {
-        $this->data['conditions'][Condition::CONTAIN->value] = ['title' => $title];
-
-        return $this;
-    }
-
-    public function startWith(string $title = 'Start With'): self
-    {
-        $this->data['conditions'][Condition::START_WITH->value] = ['title' => $title];
-
-        return $this;
-    }
-
-    public function endWith(string $title = 'End With'): self
-    {
-        $this->data['conditions'][Condition::END_WITH->value] = ['title' => $title];
-
-        return $this;
-    }
-
-    public function in(array $options = [], string $separatedBy = ',', ?string $title = 'In'): self
-    {
-        $this->data[Condition::IN->value] = [
-            'title' => $title,
-            'separated_by' => $separatedBy,
-            'options' => $options,
-        ];
-
-        return $this;
-    }
-
-    public function notIn(array $options = [], string $separatedBy = ',', ?string $title = 'In'): self
-    {
-        $this->data[Condition::NOT_IN->value] = [
-            'title' => $title,
-            'separated_by' => $separatedBy,
-            'options' => $options,
-        ];
-
-        return $this;
-    }
-
-    protected function default()
+    protected function options(array|Collection $options)
     {
         $this->equal();
     }

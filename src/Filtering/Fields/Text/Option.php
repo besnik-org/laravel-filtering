@@ -17,14 +17,6 @@ class Option extends FieldContract
         return $this;
     }
 
-    public function allConditions()
-    {
-        $this->equal();
-        $this->notEqual();
-        $this->in();
-        $this->notIn();
-    }
-
     public function equal(string $title = 'Equal'): self
     {
         $this->data['conditions'][Condition::EQUAL->value] = ['title' => $title];
