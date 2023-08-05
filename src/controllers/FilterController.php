@@ -7,8 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Besnik\LaravelFiltering\Exceptions\FilterException;
 use Besnik\LaravelFiltering\Filter;
+use Besnik\LaravelFiltering\Filter\Conditions\TextCondition;
+use Besnik\LaravelFiltering\Filter\Fields\Text;
+use Besnik\LaravelFiltering\Filter\TextField;
 use Besnik\LaravelFiltering\Filtering\Condition;
 use Besnik\LaravelFiltering\FilteringContract;
+use Besnik\LaravelFiltering\UserFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -19,6 +23,9 @@ class FilterController extends Controller
      */
     public function index(string $filterName, Request $request)
     {
+       $d = (new UserFilter())  ;
+
+       return $d->getQuery()->paginate(10);
 
         $filter =  new Filter(User::class);
         $filter->text('name', '', '')
